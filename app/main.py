@@ -13,7 +13,7 @@ def format_dir_entry(entry: os.DirEntry) -> dict:
     'owner': pwd.getpwuid(stat.st_uid).pw_name,
     'path': entry.path,
     'is_dir': entry.is_dir(),
-    # 'stat': stat,
+    'permissions': oct(stat.st_mode)[-3:],
   }
 
 
