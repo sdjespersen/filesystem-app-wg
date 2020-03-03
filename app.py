@@ -1,4 +1,4 @@
-from flask import Flask, Response, abort, jsonify, request
+from flask import Flask, abort, make_response
 import os
 import pwd
 
@@ -17,23 +17,32 @@ def format_dir_entry(entry: os.DirEntry) -> dict:
   }
 
 
+def ok_response(payload):
+  """Returns a payload wrapped in a response with OK status."""
+  return {'status': 'OK', 'payload': payload}
+
+
+def error_response(payload, status):
+  """Returns a response indicating an HTTPException."""
+  return make_response({'status': 'ERROR', 'error': payload}, status)
+
+
 def list_dir_contents(path):
   """Lists directory contents at the given path."""
-  return jsonify(list(map(format_dir_entry, os.scandir(path))))
+  return ok_response(list(map(format_dir_entry, os.scandir(path))))
 
 
-def list_file_contents(path):
-  """Lists contents of the file at the given path."""
+def read_file_contents(path):
+  """Reads contents of the file at the given path."""
   with open(path) as f:
-    contents = f.read()
-  return jsonify(contents)
+    return ok_response(f.read())
 
 
 @app.route('/')
 def list_root_dir_contents():
   """Lists the contents of the root directory."""
   if not os.path.isdir('.'):
-    abort(Response("Invalid root directory specified at startup!"))
+    abort(error_response("Invalid root directory specified at startup!", 400))
   return list_dir_contents('.')
 
 
@@ -55,5 +64,5 @@ def list_path_contents(pathname):
   if os.path.isdir(pathname):
     return list_dir_contents(pathname)
   elif os.path.isfile(pathname):
-    return list_file_contents(pathname)
-  abort(Response(f"{pathname}: No such file"))
+    return read_file_contents(pathname)
+  abort(error_response(f"{pathname}: No such file", 404))
