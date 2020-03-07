@@ -3,6 +3,7 @@ import os
 import pwd
 
 app = Flask(__name__)
+app.config['FS_ROOT_DIR'] = os.environ.get('FS_ROOT_DIR') or '.'
 
 
 def format_dir_entry(entry: os.DirEntry) -> dict:
@@ -42,9 +43,9 @@ def read_file_contents(path):
 @app.route('/')
 def list_root_dir_contents():
   """Lists the contents of the root directory."""
-  if not os.path.isdir('.'):
+  if not os.path.isdir(app.config['FS_ROOT_DIR']):
     abort(error_response("Invalid root directory specified at startup!", 400))
-  return list_dir_contents('.')
+  return list_dir_contents(app.config['FS_ROOT_DIR'])
 
 
 @app.route('/<path:pathname>')
