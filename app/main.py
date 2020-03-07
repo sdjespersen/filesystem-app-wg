@@ -14,6 +14,7 @@ def format_dir_entry(entry: os.DirEntry) -> dict:
     'path': entry.path,
     'is_dir': entry.is_dir(),
     'permissions': oct(stat.st_mode)[-3:],
+    'size_bytes': stat.st_size,
   }
 
 
