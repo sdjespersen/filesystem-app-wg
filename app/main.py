@@ -48,21 +48,22 @@ def list_root_dir_contents():
   return list_dir_contents(app.config['FS_ROOT_DIR'])
 
 
-@app.route('/<path:pathname>')
-def list_path_contents(pathname):
+@app.route('/<path:rel_pathname>')
+def list_path_contents(rel_pathname):
   """
-  Returns the directory listing or file contents at the given pathname,
+  Returns the directory listing or file contents at the given relative pathname,
   depending on the type of path.
 
-  If pathname corresponds to a directory, the response will contain the file
+  If rel_pathname corresponds to a directory, the response will contain the file
   listing for the directory.
 
-  If pathname corresponds to a file, the response will contain the contents of
-  the file.
+  If rel_pathname corresponds to a file, the response will contain the contents
+  of the file.
 
-  If pathname does not correspond to an existing file or directory, returns an
-  error.
+  If rel_pathname does not correspond to an existing file or directory, returns
+  an error.
   """
+  pathname = os.path.join(app.config['FS_ROOT_DIR'], rel_pathname)
   if os.path.isdir(pathname):
     return list_dir_contents(pathname)
   elif os.path.isfile(pathname):
