@@ -49,3 +49,10 @@ Use `./docker-build.sh` to build the Docker image.
 Use `./docker-run.sh` to run the app in a Docker container. There is currently
 no way to pass the desired root directory for the filesystem, since it would
 have to be replicated on the container.
+
+## Testing
+
+We use `pytest` plus Flask's testing client. From the root dir, run
+```
+python3 -m pytest
+```
