@@ -8,7 +8,7 @@ app.config['FS_ROOT_DIR'] = os.environ.get('FS_ROOT_DIR') or '.'
 
 def format_dir_entry(entry: os.DirEntry) -> dict:
   """Returns a dict containing the relevant pieces of an os.DirEntry."""
-  stat = entry.stat()
+  stat = entry.stat(follow_symlinks=False)
   return {
     'name': entry.name,
     'owner': pwd.getpwuid(stat.st_uid).pw_name,

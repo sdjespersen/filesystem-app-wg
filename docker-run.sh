@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 app="filesystem-app-wg"
-docker build -t ${app} .
+export FS_ROOT_DIR=$1
 docker run -d -p 8080:80 --name=${app} ${app}

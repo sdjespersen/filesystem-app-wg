@@ -2,7 +2,7 @@
 
 For the Weave Grid coding exercise.
 
-## REST API
+## REST API Documentation
 
 No `POST`, `PUT`, or `DELETE` methods have been implemented. All responses are a
 JSON-formatted dictionary containing two fields: `status` and `payload`.
@@ -27,10 +27,25 @@ Each directory entry contains the following fields:
 
 Returns the entries contained in the root directory (specified at startup).
 
-### `GET /<subdir>`
+### `GET /<dir>[/<subdir>]`
 
 Returns the entries contained in the target subdirectory, if it exists.
 
 ### `GET /<file>`
 
 Returns the contents of `<file>`, if it exists. 
+
+## Running the application
+
+### Development
+
+Use `./run-devserver.sh <root_dir>` to start up a local development version of
+the server, with root directory `<root_dir>`.
+
+### Docker
+
+Use `./docker-build.sh` to build the Docker image.
+
+Use `./docker-run.sh` to run the app in a Docker container. There is currently
+no way to pass the desired root directory for the filesystem, since it would
+have to be replicated on the container.
