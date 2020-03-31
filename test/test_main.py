@@ -19,7 +19,7 @@ def abs_path(*args):
 #  |-- foo/
 #  |   |-- foobar.txt, 755
 #  |   |-- baz/
-#  |   |    |-- baz1.txt, 600
+#  |   |    |-- .baz1.txt, 600
 #  --- bar/
 def build_directory_structure():
   # directories
@@ -33,7 +33,7 @@ def build_directory_structure():
   foo1_txt = abs_path('foo', 'foo1.txt') # /foo/foo1.txt
   with open(foo1_txt, 'w') as foo1:
     foo1.write(TEXT_ONE)
-  baz1_txt = abs_path('foo', 'baz', 'baz1.txt') # /foo/baz/baz1.txt
+  baz1_txt = abs_path('foo', 'baz', '.baz1.txt') # /foo/baz/.baz1.txt
   with open(baz1_txt, 'w') as baz1:
     baz1.write(TEXT_TWO)
   os.chmod(baz1_txt, 0o600)
@@ -95,10 +95,10 @@ def test_read_file_contents(client):
   assert response['payload'] == TEXT_ONE
 
 
-def test_correct_perms(client):
+def test_correct_perms_hidden_file(client):
   response = json.loads(client.get('/foo/baz').data)
   assert response['status'] == 'OK'
-  # baz1.txt should be the only entry
+  # .baz1.txt should be the only entry
   assert len(response['payload']) == 1
   baz1 = response['payload'][0]
   assert baz1['permissions'] == '600'
